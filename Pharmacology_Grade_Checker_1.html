@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHARMACOLOGY 💊</title>
+<style>
+  :root{
+    --deep: #063a3a;
+    --teal: #0d9488;
+    --teal-light: #5eead4;
+    --blue: #0369a1;
+    --blue-light: #7dd3fc;
+    --bg: #f0fbfa;
+    --card: #ffffff;
+    --ink: #0f2e2e;
+    --muted: #4b6b6a;
+    --danger: #b91c1c;
+    --danger-bg: #fef2f2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(160deg, #e9fbf7 0%, #f5fbfd 45%, #eaf5fc 100%);
+    color: var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 32px 16px 60px;
+  }
+  header{
+    text-align:center;
+    margin-bottom: 28px;
+    max-width: 560px;
+  }
+  .capsule{
+    display:inline-block;
+    background: linear-gradient(120deg, var(--teal) 0%, var(--blue) 100%);
+    color:#fff;
+    padding: 10px 26px;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+    box-shadow: 0 8px 20px rgba(3,105,161,.25);
+  }
+  .card{
+    background: var(--card);
+    border-radius: 18px;
+    padding: 28px 26px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 45px rgba(3, 45, 45, 0.12);
+    border: 1px solid #e2f3f1;
+  }
+  .field{
+    margin-bottom: 16px;
+  }
+  label{
+    display:block;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  input[type=text]{
+    width:100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #cfe9e6;
+    font-size: 1rem;
+    outline:none;
+    transition: border-color .15s, box-shadow .15s;
+    background:#f7fefd;
+  }
+  input[type=text]:focus{
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(13,148,136,.15);
+  }
+  button{
+    width:100%;
+    padding: 13px 14px;
+    border:none;
+    border-radius: 10px;
+    background: linear-gradient(120deg, var(--teal) 0%, var(--blue) 100%);
+    color:#fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor:pointer;
+    letter-spacing:.02em;
+    transition: transform .1s, box-shadow .15s;
+  }
+  button:hover{ box-shadow: 0 8px 20px rgba(3,105,161,.35); }
+  button:active{ transform: translateY(1px); }
+  .note{
+    font-size: .78rem;
+    color: var(--muted);
+    margin-top: 14px;
+    line-height:1.4;
+  }
+  #result{ margin-top: 22px; }
+  .hidden{ display:none !important; }
+  .student-name{
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--deep);
+    letter-spacing: .06em;
+    margin-bottom: 2px;
+  }
+  .student-meta{
+    font-size: .85rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .tabs{
+    display:flex;
+    gap:4px;
+    background:#eef8f7;
+    border-radius:10px;
+    padding:4px;
+    margin-bottom:16px;
+  }
+  .tab-btn{
+    flex:1;
+    border:none;
+    background:transparent;
+    color: var(--muted);
+    font-size:.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    padding:8px 4px;
+    border-radius:7px;
+    cursor:pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .tab-btn:hover{ color: var(--deep); }
+  .tab-btn.active{
+    background: linear-gradient(120deg, var(--teal) 0%, var(--blue) 100%);
+    color:#fff;
+    box-shadow: 0 4px 12px rgba(3,105,161,.3);
+  }
+  table.grades{
+    width:100%;
+    border-collapse: collapse;
+    font-size: .92rem;
+  }
+  table.grades tr{
+    border-bottom: 1px solid #e2f3f1;
+  }
+  table.grades tr:last-child{ border-bottom:none; }
+  table.grades td{
+    padding: 9px 4px;
+  }
+  table.grades td.label{
+    color: var(--muted);
+  }
+  table.grades td.value{
+    text-align:right;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  table.grades tr.highlight td{
+    font-size: 1.05rem;
+    color: var(--teal);
+  }
+  table.grades tr.highlight td.value{
+    color: var(--blue);
+    font-weight:800;
+  }
+  .rating-box{
+    text-align:center;
+    padding: 18px 4px 6px;
+  }
+  .rating-box .big{
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--blue);
+  }
+  .rating-box .big-label{
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing:.05em;
+    color: var(--muted);
+  }
+  .empty-box{
+    color: var(--muted);
+    font-size: .88rem;
+    text-align:center;
+    padding: 22px 8px;
+    font-style: italic;
+  }
+  .error-box{
+    background: var(--danger-bg);
+    border: 1px solid #fecaca;
+    color: var(--danger);
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: .9rem;
+  }
+  .loading-box{
+    color: var(--muted);
+    font-size: .9rem;
+    text-align:center;
+  }
+  footer{
+    margin-top: 30px;
+    color: var(--deep);
+    font-size: .95rem;
+    font-weight: 600;
+    font-style: italic;
+    text-align:center;
+    max-width: 480px;
+    letter-spacing:.01em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="capsule">PHARMACOLOGY 💊</span>
+</header>
+
+<div class="card">
+  <form id="lookupForm">
+    <div class="field">
+      <label for="privateCode">Private Code</label>
+      <input type="text" id="privateCode" autocomplete="off" required>
+    </div>
+    <button type="submit">Assessing my Therapeutic Index</button>
+    <p class="note">Your private code was given to you by your instructor. Do not share it — anyone with your code can see your grades.</p>
+  </form>
+
+  <div id="result"></div>
+</div>
+
+<footer>
+  In case no one told you... You are PHARMAnomenal! (˵ •̀ ᴗ - ˵ )
+</footer>
+
+<script>
+  // ---- CONFIG ----
+  var CODE_COLUMN = "PrivateCode";
+  var LASTNAME_COLUMN = "LastName";
+  var FIRSTNAME_COLUMN = "FirstName";
+  var MIDDLENAME_COLUMN = "MiddleName";
+
+  // Grading periods, in the order their tabs appear. Each period's columns
+  // are any CSV header starting with "<Period>_" (e.g. Prelim_Quiz, Prelim_Grade).
+  var PERIODS = ["Prelim", "Midterm", "Final"];
+  // Column holding the overall computed rating, shown on its own tab.
+  var FINAL_RATING_COLUMN = "FinalRating";
+
+  // Within a period's columns, one whose header contains one of these words
+  // is treated as that period's headline grade and shown highlighted.
+  var HIGHLIGHT_KEYWORDS = ["grade", "rating", "total"];
+
+  var gradesData = [];
+  var loadError = null;
+  var currentMatch = null;
+  var activeTab = "Prelim";
+
+  // Grade data is embedded directly in this file so the page works as a
+  // single upload — no separate grades.csv to go missing or 404.
+  var EMBEDDED_CSV = `PrivateCode,LastName,FirstName,MiddleName,Section,Email,Prelim_Quizzes,Prelim_Activity,Prelim_LongTest,Prelim_MajorExam,Prelim_Grade,Midterm_Quizzes,Midterm_Activity,Midterm_LongTest,Midterm_MajorExam,Midterm_Grade,Final_Quizzes,Final_Activity,Final_LongTest,Final_MajorExam,Final_Grade,FinalRating
+A-EQC68,ABANTO,IRISH,PALOMO,A,abantoirish@sac.edu.ph,80.35,88.33,80,72.5,83.82,,,,,,,,,,,
+A-DSQTF,ABDUL,MOHAMMAD HANIEF,MAGOMNANG,A,abdulmohammadhanief@sac.edu.ph,86.42,92,78.89,67.5,84.31,,,,,,,,,,,
+A-P3FEC,ACUB,JONAMAE ANGELYN,CUÑA,A,acubjonamae@sac.edu.ph,83.39,90.67,74.78,61.25,81.22,,,,,,,,,,,
+A-VYPYE,AGUIRRE,SOPHIA ANDREA,SAGUDAQUIL,A,sophiaaguirre@sac.edu.ph,77.76,93.67,74.78,52.5,78.8,,,,,,,,,,,
+A-NYXAA,ALTAR,JONBERET ED MARIE,DIAMANTE,A,altarjonberetedmarie@sac.edu.ph,80.19,92.67,74.78,65,81.63,,,,,,,,,,,
+A-UBNPV,ALVAREZ,ALLIAH JANINE,SOLIS,A,alliahalvarez@sac.edu.ph,89.46,92.33,81.11,71.25,86.27,,,,,,,,,,,
+A-9RAR6,Alvarez,Cristine Joy,Sardo,A,cjalvarez@sac.edu.ph,83.85,89,78.89,53.75,80.59,,,,,,,,,,,
+A-QQXXK,AMEDO,AKELA DWAYNE,PECHON,A,amedoakeladwayne@sac.edu.ph,89.14,93.67,76.67,65,84.05,,,,,,,,,,,
+A-ZNQ8V,AMON,BLESSY RAE,LAGUNDAY,A,amonblessyrae@sac.edu.ph,92.92,92,85.56,82.5,90.27,,,,,,,,,,,
+A-VFJFP,ANDRADA,REISAN KIRBELLE,ESTILONG,A,andradareisankirbele@sac.edu.ph,96.67,94.33,91.11,81.25,92.51,,,,,,,,,,,
+A-K5XDQ,APILLANES,XHANDER VORG,GERADILA,A,apillanesxhandervorg@sac.edu.ph,75.93,97,74.78,51.25,78.68,,,,,,,,,,,
+A-TTYWY,ARAGONES,MA CATHALINA VHINNES,GRENCIO,A,aragonesmacathalinavhinnes@sac.edu.ph,77.95,93.33,75.56,45,78.08,,,,,,,,,,,
+A-ZFESV,ARCILLAS,IRRISH SHANELLE,TAMAGOS,A,irrisharcillas@sac.edu.ph,72.94,85.67,74.33,46.25,75.72,,,,,,,,,,,
+A-YKAUX,ARNAIZ,KIAN ANTHONEIL,DALUMPINES,A,arnaizkiananthoneil@sac.edu.ph,89.04,94.67,82.22,58.75,84.31,,,,,,,,,,,
+A-R63YH,ARQUISOLA,CHARITY ANN,DORADO,A,arquisolacharityann@sac.edu.ph,91.97,96,83.33,76.25,88.88,,,,,,,,,,,
+A-VE256,ARROYO,JULIANA JULLIE,GALLANO,A,arroyojuliana@sac.edu.ph,77.27,87.33,77.78,66.25,81.25,,,,,,,,,,,
+A-DABSQ,ASOY,RENZ JOHN,CRETENCIO,A,asoyrenzjohn@sac.edu.ph,88.73,88.33,87.78,75,87.94,,,,,,,,,,,
+A-7MPRW,ATILANO,LOVELYN FAITH,SICAN,A,lovelynatilano@sac.edu.ph,83.5,94.67,80,58.75,82.65,,,,,,,,,,,
+A-357PK,BACUSMO,ANTONIO MIGUEL,ECRAELA,A,bacusmoantoniomiguel@sac.edu.ph,81.64,87,77.78,55,79.82,,,,,,,,,,,
+A-ZP4CJ,BALLENAS,LANCE JAMES,DE LA TORRE,A,ballenaslancejames@sac.edu.ph,78.62,85,81.11,58.75,80.5,,,,,,,,,,,
+A-44MD2,BARCELO,AHLRYN GYDE,GARCENILA,A,barceloahlryngyde@sac.edu.ph,75.41,95.33,76.67,56.25,79.8,,,,,,,,,,,
+A-JR4KP,BARDENAS,JHULIA NICOLE,PROVIDO,A,jhulia.bardenas@sac.edu.ph,82.02,89,82.22,71.25,84.56,,,,,,,,,,,
+A-4J8Z4,BARRIENTOS,JIRAH,LABIOS,A,barrientosjirah@sac.edu.ph,88.73,89.67,76.67,70,84.36,,,,,,,,,,,
+A-9V3TV,BARRIENTOS,KENT,OSORIO,A,kentbarrientos@sac.edu.ph,87.25,94.33,75.56,67.5,83.99,,,,,,,,,,,
+A-4W4A7,BARTE,CHELSEA,SOLIS,A,bartechelsea@sac.edu.ph,82.6,91,80,70,84.17,,,,,,,,,,,
+A-WXQJV,BARTOLO,DIONERY,ALEGONZA,A,bartolodionery@sac.edu.ph,90.59,94.67,78.89,60,84.04,,,,,,,,,,,
+A-HU8EZ,BAUTISTA,JOAN GRACE,MANATO,A,bautistajoangrace@sac.edu.ph,87.77,97.67,74.78,71.25,85.15,,,,,,,,,,,
+A-D542F,BERTIZ,SYDNEY,SAN SEBASTIAN,A,bertizsydney@sac.edu.ph,91.23,95.67,83.33,55,84.43,,,,,,,,,,,
+A-WUZ8T,BERTOLANO,CLAIRE THERESE,FARRIO,A,bertoanoclaire@sac.edu.ph,82.37,89,73.89,50,78.3,,,,,,,,,,,
+A-QU3P6,BICO,THERA NICOLE,,A,bicotheranicole@sac.edu.ph,87.11,96,84.44,76.25,88.18,,,,,,,,,,,
+A-VSYWK,BONARES,MARIA CHARLYNE,VEÑEGAS,A,bonaresmariacharlyne@sac.edu.ph,84.81,90.33,81.11,61.25,83.04,,,,,,,,,,,
+A-W6E8U,BUSAYONG,KASSANDRA,SENIEREZ,A,busayongkassandra@sac.edu.ph,82.14,94.33,76.67,48.75,79.65,,,,,,,,,,,
+A-7U9FK,BUSAYONG,SATEA GLORY,GRUY,A,busayongsateaglory@sac.edu.ph,78.44,87,75.56,58.75,79.38,,,,,,,,,,,
+A-6FU6H,CABAñERO,RAFEL KIM,CAGALAWAN,A,cabanerorafelkim@sac.edu.ph,81.77,91,74.78,65,81.7,,,,,,,,,,,
+A-KHS9D,CABAñERO,REEXA AMIRA,CAJIGAS,A,cabaneroreexaamira@sac.edu.ph,79.62,89.67,77.78,61.25,81.07,,,,,,,,,,,
+A-ZU9KG,CABAYAO,HANA MARICON,CAÑA,A,cabayaohana@sac.edu.ph,84.63,93,74.78,46.25,79.27,,,,,,,,,,,
+A-BAHBZ,CABREJAS,HERZEL,CALMADA,A,herzelcabrejas@sac.edu.ph,86.38,91,80,60,82.93,,,,,,,,,,,
+A-PXEHR,CABRILLOS,MARK ROLAND,GRASPARIL,A,cabrillossharachariz@sac.edu.ph,85.85,87.67,78.89,65,83.04,,,,,,,,,,,
+A-MVC4T,CABRILLOS,SHARA CHARIZ,SOLOMON,A,cabrillosmarkroland@sac.edu.ph,82.6,91.33,75.56,71.25,83.36,,,,,,,,,,,
+A-F54CR,CAHILIG,RHIANNE JADE,NOSCAL,A,cahiligrhiannejade@sac.edu.ph,86.38,81.33,73.89,65,80.95,,,,,,,,,,,
+A-3V3XR,CAMPOY,EVETTE IVY,PARIOLAN,A,evettecampoy@sac.edu.ph,70.84,79.73,75.56,58.75,76.77,,,,,,,,,,,
+A-QZ5T8,CANJA,DENNISE SAMANTHA,PON-AN,A,canjadennise@sac.edu.ph,83.14,80,80,71.25,82.88,,,,,,,,,,,
+A-XQBYU,CARIñO,SAMANTHA ALEXANDRA,MASMELA,A,carinosamanthaalexandra@sac.edu.ph,82.31,82.13,82.22,68.75,83.09,,,,,,,,,,,
+B-AUS5V,CHICANO,CARLENE JANE,PANAGUITON,B,chicanocarlenejane@sac.edu.ph,86.23,96,77.78,61.25,83.34,,,,,,,,,,,
+B-YMPXU,CIRIACO,RONALD MIGUEL,ABUELA,B,ciriacoronald@sac.edu.ph,78.37,89,74.78,50,77.72,,,,,,,,,,,
+B-8ERA6,CONCEPCION,JUANA AYESHA,BACALING,B,concepcionjuanaayesha@sac.edu.ph,91.43,96,83.33,73.75,88.27,,,,,,,,,,,
+B-YRFA9,DELA PEñA,VENESSA JAINE,CABRERA,B,venessajaine@sac.edu.ph,82.6,94.67,72.11,61.25,81,,,,,,,,,,,
+B-54KUT,DELGADO,SHAHAIRA JANE,OLITJAO,B,shahairadelgado@sac.edu.ph,80.28,93.67,72.11,50,78.13,,,,,,,,,,,
+B-Y897P,DIMAMAY,KURT KIRBY,NAGRIT,B,dimamaykurtkirby@sac.edu.ph,87.89,93.33,83.33,60,84.41,,,,,,,,,,,
+B-9723J,DINO,ERICA JOY,GACITA,B,dinoericajoy@sac.edu.ph,91.23,88.33,78.89,71.25,85.47,,,,,,,,,,,
+B-ZDEMM,DIOSO,JOSELLE MAE,ESTOMO,B,diosojosellemae@sac.edu.ph,77.99,93,73.44,46.25,77.61,,,,,,,,,,,
+B-TRWTP,DIVINAGRACIA,JEZELLE MAE,VICTORIANO,B,divinagraciajezellemae@sac.edu.ph,77.94,95.33,73.44,55,79.25,,,,,,,,,,,
+B-FTU8A,ELICAN,KRIZIA LEIGH,CADUADA,B,elicanleigh@sac.edu.ph,83.74,90.33,77.78,60,81.74,,,,,,,,,,,
+B-GGJ4A,ELLO,DERLENE SHANE,FILLONE,B,elloderlene@sac.edu.ph,80.62,91.67,76.67,62.5,81.54,,,,,,,,,,,
+B-JN7EZ,ENAD,PRINCE ALEC,DUNOZ,B,princeenad@sac.edu.ph,81.35,92,85.56,77.5,86.96,,,,,,,,,,,
+B-M8A88,ESCALANTE,KZCR,VEDEJA,B,kzcr@sac.edu.ph,81.06,93,82.22,68.75,84.47,,,,,,,,,,,
+B-AZGEF,ESCANER,PRINCE SYMON DREW,BAYOG,B,prince.escaner@sac.edu.ph,84.39,94.67,83.33,60,83.91,,,,,,,,,,,
+B-AHRNQ,ESMENOS,FIONA GRACE,SANMILLAN,B,esmenosfiona@sac.edu.ph,80.73,93.67,80,55,81.2,,,,,,,,,,,
+B-FEA5D,ESPAñOLA,RYAN RAY,POLIDARIO,B,espanolaryanray@sac.edu.ph,70.93,89,74.33,66.25,79.37,,,,,,,,,,,
+B-UN7J2,ESPARAR,JOHN DAVE,IWAG,B,j.esparar@sac.edu.ph,76.64,89,76.67,62.5,80.35,,,,,,,,,,,
+B-UWGJ3,ESPARAR,WILMER,TAMBA,B,espararwilmer@sac.edu.ph,80.39,93,81.11,71.25,84.56,,,,,,,,,,,
+B-P9C66,ESTELLENA,CANDICE,MUNION,B,estellenacandice@sac.edu.ph,86.1,94.67,85.56,75,87.81,,,,,,,,,,,
+B-PYSYS,ESTRELLA,GLAIZA,ABONG,B,estrellaglaiza@sac.edu.ph,91.23,96.33,82.22,77.5,88.75,,,,,,,,,,,
+B-JJKPQ,EUSEBIO,LUIS EDWARD,VENGANO,B,eusebiolius@sac.edu.ph,79.95,87.67,85.56,71.25,84.78,,,,,,,,,,,
+B-5PXKQ,EVANGELISTA,SOPHIA LEI TEREESE,SABUG,B,evangelistasophia@sa.edu.ph,82.6,93.33,84.44,67.5,85.13,,,,,,,,,,,
+B-7G5JU,FABILA,JIRAH ELLISE,,B,fabilajirahellise@sac.edu.ph,85.5,96,76.67,61.25,82.92,,,,,,,,,,,
+B-DJAD7,FEBRIN,SHAINAH AMOR,ESCARLAN,B,febrinshainah@sac.edu.ph,85.74,92.67,80,63.75,83.8,,,,,,,,,,,
+B-TVZR8,FLORES,CHLOE,JUNSAY,B,floreschloe@sac.edu.ph,85.06,97.67,78.89,63.75,84.13,,,,,,,,,,,
+B-Y7RZ2,GAITE,ARMAND CHRISTIAN,,B,gaitearmandchristian@sac.edu.ph,79.02,93,76.67,61.25,81.17,,,,,,,,,,,
+B-6JH7G,GONO,JEFF,TABALANZA,B,gonojeff@sac.edu.ph,75.01,92,81.11,68.75,82.83,,,,,,,,,,,
+B-ZXMG5,GONZAGA,ERL HENRIQUE,RUBIO,B,gonzagaerlhenrique@sac.edu.ph,82.93,88.33,82.22,72.5,84.89,,,,,,,,,,,
+B-RN9D6,GRUY,SHAYNELLE THEA,QUIATCHON,B,gruyshaynelle@sac.edu.ph,83.29,93.67,77.78,55,81.15,,,,,,,,,,,
+B-57HSA,IMPORTANTE,DANIELLA ANN,SUAN,B,d.importante@sac.edu.ph,80.78,90,80,68.75,83.41,,,,,,,,,,,
+B-ZWJPU,JALIPA,CARISHA JEAN,JAREñO,B,cjalipa@sac.edu.ph,75.35,88.33,75.56,53.75,77.96,,,,,,,,,,,
+B-BBK5S,JAMANDRE,CANDICE MICHELLE,SAGUDAQUIL,B,jamandrecandicemichelle@sac.edu.ph,88.73,95.33,84.44,63.75,85.91,,,,,,,,,,,
+B-9JCXH,JAUDINES,MERYLL JAED,DE LA CRUZ,B,jaudinesmerylljaed@sac.edu.ph,88.63,92.67,77.78,60,83.07,,,,,,,,,,,
+B-9YUZV,JOSECO,RAFF BENIDICT,LAMPREA,B,josecoraff@sac.edu.ph,82.68,94.67,76.67,60,81.9,,,,,,,,,,,
+B-RNQHR,JUANILLO,ABBY GAIL,BUNCAG,B,abby.juanillo@sac.edu.ph,89.04,89.33,77.78,70,84.65,,,,,,,,,,,
+B-5WY3Q,JUANILLO,TRACEY LORREINE,ESTRELLA,B,juanillotracey@sac.edu.ph,86.74,91,83.33,66.25,85.08,,,,,,,,,,,
+B-WBW9H,KIPTE,MAHRXEN RHEDZ,ELISTERIO,B,kiptemahrxenrhedz@sac.edu.ph,80.42,90,77.78,57.5,80.53,,,,,,,,,,,
+B-H73C4,LABINDAO,Paul Nimrod,SANDIG,B,paullabindao@sac.edu.ph,81.31,93.67,74.33,58.75,80.65,,,,,,,,,,,
+B-7PUPA,LARIOSA,MARY GRACE,BASAÑES,B,lariosamary@sac.edu.ph,78.23,90.67,75.56,67.5,81.63,,,,,,,,,,,
+B-E7CSP,LAUREZO,VIL ARYS,CASEñAS,B,laurezovilarys@sac.edu.ph,81.26,89,72.11,71.25,81.88,,,,,,,,,,,
+B-7JJR7,LIM,JAN DENVER,GONZALES,B,jan.lim@sac.edu.ph,83.6,96.33,76.67,56.25,81.59,,,,,,,,,,,
+B-QU9W5,LUMOGDANG,CLAIRE MARIAH,DAVO,B,lumogdangclairemaria@sac.edu.ph,83.29,90,83.33,55,81.99,,,,,,,,,,,
+B-9RQVA,MADARCOS,MA. RINAH MAE,AMARILA,B,madarcosmarinah@sac.edu.ph,75.6,93,73.89,55,78.54,,,,,,,,,,,
+C-WTF8B,MAGALLANES,FREA JYLE,ALVIOR,C,magallanesfreajyle@sac.edu.com,79.68,90.33,74.78,66.25,81.43,,,,,,,,,,,
+C-8GDP9,MAGBANUA,IANNA FRANCES,RELOJ,C,magbanuaiannafrances@sac.edu.ph,69.64,88.33,73,38.75,74.53,,,,,,,,,,,
+C-A4ES2,MAGO,MA. ERICA J'SHA,AMAR,C,magoma.ericajsha@sac.edu.ph,87.6,96.67,85.56,61.25,85.66,,,,,,,,,,,
+C-Z44D8,MAGRARE,ANELA MARIE,ELORIO,C,magrareanelamarie@sac.edu.ph,85.22,90.33,74.78,66.25,82.54,,,,,,,,,,,
+C-TCZBS,MAGTUPA,JANEIL ALROSE,BUENAVISTA,C,magtupajaneil@sac.edu.ph,84.75,86.33,80,35,78.7,,,,,,,,,,,
+C-RUC4U,MAJAROCON,HINRICH,TEJARES,C,majaroconhinrich@sac.edu.ph,76.22,89.67,73,46.25,76.64,,,,,,,,,,,
+C-TQWCY,MALUTAO,JEN ASHLEY,IGNACIO,C,malutaojenashley@sac.edu.ph,81.89,91.67,83.33,50,80.96,,,,,,,,,,,
+C-KUKRW,MANGADSIL,ELLA JADE CARLEEN,SALINOG,C,mangadsilellajadecarleen@sac.edu.ph,69.72,87.67,74.33,50,75.68,,,,,,,,,,,
+C-JVF5U,MARMETO,SAN CRYSTEL MAE,CANJA,C,marmetosancrystelmae@sac.edu.ph,75.81,91,78.89,63.75,81.28,,,,,,,,,,,
+C-9T486,MARQUEZ,AIRA NICOLE,ACDOL,C,marquezairanicole@sac.edu.ph,72.1,92.67,72.56,57.5,77.96,,,,,,,,,,,
+C-9BNKV,MASANIT,JOSHUA,ALDEMITA,C,masanitjoshua@sac.edu.ph,81.16,94.33,84.44,62.5,83.99,,,,,,,,,,,
+C-VDW6U,MINASALVAS,KHREEZTEL CZARMAGNE,FILLONE,C,minasalvaskhreeztelczarmagne@sac.edu.ph,81.3,96.67,73,62.5,81.51,,,,,,,,,,,
+C-9QTMP,MONEDERA,ANDREA,RODRIGUEZ,C,andreamonedera@sac.edu.ph,88.43,91,77.78,77.5,86.28,,,,,,,,,,,
+C-7FSCN,MORENO,GERICA MAE,NESIO,C,morenogericamae@sac.edu.ph,78.51,92.67,77.78,55,80.05,,,,,,,,,,,
+C-7GNT4,MOSCOSO,CLAUIE JANE,BARTOLO,C,moscosoclauiejane@sac.edu.ph,84.68,90.33,84.44,60,83.6,,,,,,,,,,,
+C-G22BR,MOSCOSO,ELLAREY KRIZIAH,CASPILLO,C,moscosoellareykriziah@sac.edu.ph,76.68,90.33,80,56.25,80.14,,,,,,,,,,,
+C-MXTJV,MOSCOSO,JULLIENE ALEXA,DOLLOLASA,C,moscosojulliene@sac.edu.ph,72.85,89,74.33,51.25,76.75,,,,,,,,,,,
+C-GRU7Z,MOSCOSO,NATASHA FAYE,FAJILAGUTAN,C,moscosonatashafaye@sac.edu.ph,72.18,91.67,72.56,46.25,76.03,,,,,,,,,,,
+C-85QDS,NALAM,JAYZELBIE,ASOY,C,jayzelbienalam@sac.edu.ph,80.69,91.33,77.78,58.75,81.03,,,,,,,,,,,
+C-WG9CD,NEPOMUCENO,KHARL ANGELO,OLASA,C,nepomucenokharlangelo@sac.edu.ph,77.81,86.33,73,56.25,78.01,,,,,,,,,,,
+C-WB4ZE,NIGNA,ANGELICA VIE,LAGUNDAY,C,nignaangelica@sac.edu.ph,91.86,95.33,83.33,61.25,85.76,,,,,,,,,,,
+C-KTK5X,OLIVERIO,FRANCINE MAY,SAYDOKES,C,oliveriofrancinemay@sac.edu.ph,87.17,89,84.44,66.25,85.15,,,,,,,,,,,
+C-G2D9G,OMAYANA,CECI DENISE,GILLERA,C,Ceciomayana@sac.edu.ph,75.78,97,81.11,51.25,80.23,,,,,,,,,,,
+C-XRUHD,OPAO,MARIA CASSANDRA,RODRIGUEZ,C,opaomaria@sac.edu.ph,84.77,89.67,77.78,60,81.85,,,,,,,,,,,
+C-VURQY,ORONG,HAZEL ANN,EMEJAS,C,oronghazelann@sac.edu.ph,84.7,94.33,85.56,63.75,85.23,,,,,,,,,,,
+C-7DMNM,ORTEGA,EDGAR,VALDE,C,ortegaedgar@sac.edu.ph,77.62,89.67,73.44,45,76.93,,,,,,,,,,,
+C-AGP7E,OSUYOS,JELLA RUSS,MACADANGDANG,C,osuyosjellaruss@sac.edu.ph,80.46,89.67,81.11,58.75,81.57,,,,,,,,,,,
+C-WF7GG,PACHOCO,KRISTA LEEANNE,APRUEBO,C,pachocokrista@sac.edu.ph,77.81,92.33,76.67,57.5,80.08,,,,,,,,,,,
+C-AK8ME,PACURE,RIAN JANE,ACOPIO,C,pacurerianjane@sac.edu.ph,62.25,89,73.44,68.75,77.91,,,,,,,,,,,
+C-7DEYH,PADASAS,MARC RODULF,SALON,C,padasasmarcrodulf@sac.edu.ph,77.7,94.33,78.89,68.75,83.16,,,,,,,,,,,
+C-T9A4G,PADERNILLA,ERICA REI,MINOY,C,padernillaericarei@sac.edu.ph,86.27,89.67,81.11,72.5,85.48,,,,,,,,,,,
+C-AB5Y5,PAGUNALING,EUNICE ANNE,NAVARRA,C,eunicepagunaling@sac.edu.ph,77.45,92,77.78,71.25,82.98,,,,,,,,,,,
+C-5DSMW,PAHILGA,BRAVEN NASH,POLLICAR,C,pahilgabravennash@sac.edu.ph,69.25,86.33,71.22,50,74.61,,,,,,,,,,,
+C-5KM62,PAJATE,LEANNE,IDO,C,pajateleanne@sac.edu.ph,72.39,87,75.56,53.75,77.17,,,,,,,,,,,
+C-7WGTT,PALCORIN,HANNAH SOPHIA,NICOR,C,palcorinhannahsophia@sac.edu.ph,56.77,33.33,75.56,50,65.24,,,,,,,,,,,
+C-6PCTD,PANAGUITON,JOHN GARELL,SABAYTON,C,panaguitonjohngarell@sac.edu.ph,79.28,93,76.67,63.75,81.72,,,,,,,,,,,
+C-CJBQ8,PANGANIBAN,AUDRY LORRIENE,BABALLO,C,panganibanaudry@sac.edu.ph,87.79,92.33,88.89,86.25,90.88,,,,,,,,,,,
+C-XRJAS,PARKER,THEONNIE,NOBLE,C,parkertheonnie@sac.edu.ph,82.92,87,76.67,66.25,82.05,,,,,,,,,,,
+C-YN7F4,PAULINO,MARY GRACE,DELOS SANTOS,C,paulinomary@sac.edu.ph,78.44,94.33,78.89,56.25,80.81,,,,,,,,,,,
+C-48T8V,PECHAYCO,NERIEL,MAGBANUA,C,pachayconeriel@sac.edu.ph,79.89,89.67,76.67,57.5,80.1,,,,,,,,,,,
+C-9N8VZ,PIANSAY,JOMIR,TONGCUA,C,piansayjomir@sac.edu.ph,78.85,84.33,77.78,58.75,79.61,,,,,,,,,,,
+C-88SGN,PON-AN,MARIANE,JUMAWAN,C,pon-anmarian@sac.edu.ph,80.95,91,82.22,82.5,86.9,,,,,,,,,,,
+D-PCVV8,PUNO,CRYSTAL ARRIANE,TADURAN,D,punocrystalarriane@sac.edu.ph,73.48,87.67,75.56,57.5,78.23,,,,,,,,,,,
+D-BE97H,QUILINO,JOVANE MERCEL,CABE,D,quilinojovanemercel@sac.edu.ph,79.85,90.33,82.22,68.75,83.83,,,,,,,,,,,
+D-3TEFS,RAMOS,DANIELLE JOY,SANTARINA,D,danielle.ramos@sac.edu.ph,77.93,83.67,82.22,68.75,82.44,,,,,,,,,,,
+D-DAV5T,ROCETA,SHAHANA PAULENE,BAYOG,D,rocetashahanapaulene@sac.edu.ph,81.94,95.33,80,57.5,82.19,,,,,,,,,,,
+D-9HMMK,ROSENDO,DAREN PAUL,SALVANI,D,rosendodarenpaul@sac.edu.ph,93.73,97.67,84.44,77.5,90.01,,,,,,,,,,,
+D-6DK8P,RUENATA,JOLYN MARIE,ULIT,D,ruenatajolynmarie@sac.edu.ph,77.73,89,84.44,71.25,84.26,,,,,,,,,,,
+D-Y244P,SALCEDO,JANNAH MAY,ONOFRE,D,salcedojannahmay@sac.edu.ph,79.77,92.33,78.89,60,81.53,,,,,,,,,,,
+D-ZFUUX,SALOMON,ANN MARIE,ALAGOS,D,salomonannmarie@sac.edu.ph,79.98,87.67,78.89,58.75,80.62,,,,,,,,,,,
+D-9FG4B,SANGAT,ROENA,VACIO,D,sangatroena@sac.edu.ph,85.27,94.33,77.78,60,82.65,,,,,,,,,,,
+D-E5MKQ,SANTA CRUZ,CYNDY,SUMANDE,D,santacruzcyndy@sac.edu.ph,86.94,97,81.11,72.5,86.72,,,,,,,,,,,
+D-UD3GD,SANTILLAN,SIMEON BENEDICK,MAGTULIS,D,santillansimeonbenedick@sac.edu.ph,91.42,93.33,85.56,73.75,88.42,,,,,,,,,,,
+D-YDF6B,SARCON,BELLE KEZIAH,INFANTE,D,sarconbellekeziah@sac.edu.ph,80.94,87,81.11,50,79.52,,,,,,,,,,,
+D-4FA2R,SEBON,HANNA ALIJAH,GUMIA,D,sebonhannaalijah@sac.edu.ph,77.85,92.33,80,68.75,83.17,,,,,,,,,,,
+D-BPYVP,SEMBRAN,VIRGILYN,GEOCADIN,D,virgilyn.sembran@sac.edu.ph,91.23,92,87.78,91.25,92.24,,,,,,,,,,,
+D-C3VYV,SEMOLAVA,ALLEN,BANTOLO,D,semolavaallen@sac.edu.ph,75.93,89,80,58.75,80.29,,,,,,,,,,,
+D-WE2ZV,SERENEO,KRYSTEL GRACE,JAVIER,D,sereneokrysielgrace@sac.edu.ph,88.28,95.33,78.89,57.5,83.18,,,,,,,,,,,
+D-YJNTH,SETIAS,KATE,,D,katesetias@sac.edu.ph,82.17,88.33,85.56,82.5,87.57,,,,,,,,,,,
+D-Q9YN6,SEVERINO,MERCY JOY,GUANZON,D,severinomercyjoy@sac.edu.ph,77.85,91.33,82.22,63.75,82.58,,,,,,,,,,,
+D-8N4AE,SINGSON,RAIZEIN CAL ROI,SANTOS DELOS,D,singsonraizein@sac.edu.ph,85.91,87,75.56,71.25,83.37,,,,,,,,,,,
+D-FB4CF,TABALANZA,KENT JOSHUA,SALAZAR,D,tabalanzakentjoshua@sac.edu.ph,79.14,88.33,80,60,81.08,,,,,,,,,,,
+D-BS434,TAMON,ZYRA,TALJA,D,tamonzyra@sac.edu.ph,80.77,88.33,77.78,45,78.45,,,,,,,,,,,
+D-T5WKA,TARROZA,AIRA,SERAPION,D,tarrozaaira@sac.edu.ph,84.44,89,80,57.5,81.74,,,,,,,,,,,
+D-WJS4F,TELESFORO,BLAISE,AUTAJAY,D,telesforoblaise@sac.edu.ph,92.45,95.33,87.78,73.75,89.48,,,,,,,,,,,
+D-ZQZFH,TEMPLORA,THERESE ADELLE VICTORIA,MABUNAY,D,therese.templora@sac.edu.ph,87.24,97,83.33,82.5,89.33,,,,,,,,,,,
+D-7CQXR,TEVES,KRISTINE JOY,PILLE,D,teveskristinejoy@sac.edu.ph,79.09,93.67,82.22,58.75,82.17,,,,,,,,,,,
+D-6SU55,TORGA,CWEN CAHIRA JANE,BECHAYDA,D,cwen.torga@sac.edu.ph,80.49,88.33,78.89,61.25,81.32,,,,,,,,,,,
+D-GYSXE,UMADHAY,RHISSA JOYCE,GAVADAN,D,umadhayrhissajoyce@sac.edu.ph,82.56,95.67,84.44,76.25,87.22,,,,,,,,,,,
+D-V2ARZ,UNGSOD,RAMON CHRISTOFFE,BARDINAS,D,ungsodramon@sac.edu.ph,78.95,88.33,78.89,72.5,83.26,,,,,,,,,,,
+D-FVE6F,VALDELLON,KEVIN,AGOCEJOS,D,valdellonkevin@sac.edu.ph,87.07,89,84.44,75,86.88,,,,,,,,,,,
+D-WGYX8,VALERTA,ALLYSSA ZHAIRRAH,GONO,D,valertaallyssa@sac.edu.ph,78.31,92,74.33,75,83.05,,,,,,,,,,,
+D-3ZFYJ,VARGAS,KEN GABRIEL,VILLANUEVA,D,vargasken@sac.edu.ph,83.44,93.33,75.56,83.75,86.33,,,,,,,,,,,
+D-PZR4U,VASCO,KAWLA FEL,FALLARIA,D,vascokawlafel@sac.edu.ph,79.39,87,75.56,45,77.42,,,,,,,,,,,
+D-YM3KC,VELEZ,TRISTAN JOSHUA,BASAñES,D,veleztrisatanjoshua@sac.edu.ph,79.28,86.33,77.78,57.5,79.75,,,,,,,,,,,
+D-9C66K,VEÑEGAS,JEHNNY LYNN,PADILLA,D,venegasjehnnylynn@sac.edu.ph,79.28,87.67,76.67,71.25,82.42,,,,,,,,,,,
+D-EF3Z6,VICTORIANO,JEYNEL JOY,FLORENTINO,D,victorianojeyneljoy@sac.edu.ph,75.44,89,74.33,57.5,78.52,,,,,,,,,,,
+D-BUNN8,VICTORINO,KIARRA ZARRIAH,MISAJON,D,victorinokiarra@sac.edu.ph,81.1,92.33,83.33,65,83.9,,,,,,,,,,,
+D-YEJQE,VILLARIN,CHARLES FRANKLIN,CELINO,D,charlesvillarin@sac.edu.ph,85.64,85.67,85.56,78.75,87.12,,,,,,,,,,,
+D-WK7PS,VILVAR,BLESSY MAE,BANDOJA,D,vilvarblessymae@sac.edu.ph,75.95,93,74.78,51.25,78.08,,,,,,,,,,,
+D-GCEGV,VIRAYO,HANNAH ALYSSA,AURELIO,D,virayohannahalyssa@sac.edu.ph,76.55,89,73.89,48.75,77.03,,,,,,,,,,,
+D-5MQXK,WACAY,JENNILYN MARIE,TALANTOR,D,jenn.wacay@sac.edu.ph,83.85,92,77.78,50,80.01,,,,,,,,,,,
+D-NG7EJ,YAP,KEAH,EPETITO,D,yapkeah@sac.edu.ph,81.89,94.33,81.11,68.75,84.56,,,,,,,,,,,
+D-9PGY3,YARANON,JOHN CASPER,CAMACAN,D,yaranonjohn@sac.edu.ph,81.37,86.33,74.33,36.25,76.71,,,,,,,,,,,
+`;
+
+  function parseCSV(text) {
+    // Minimal CSV parser: handles quoted fields with commas/quotes, plain commas otherwise.
+    var rows = [];
+    var row = [];
+    var field = "";
+    var inQuotes = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else {
+          field += c;
+        }
+      } else {
+        if (c === '"') { inQuotes = true; }
+        else if (c === ',') { row.push(field); field = ""; }
+        else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ""; }
+        else if (c === '\r') { /* skip */ }
+        else { field += c; }
+      }
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    rows = rows.filter(function (r) { return r.length > 1 || (r.length === 1 && r[0].trim() !== ""); });
+    if (!rows.length) return [];
+    var headers = rows[0].map(function (h) { return h.trim(); });
+    return rows.slice(1).map(function (r) {
+      var obj = {};
+      headers.forEach(function (h, idx) { obj[h] = (r[idx] || "").trim(); });
+      return obj;
+    });
+  }
+
+  function labelize(header, prefix) {
+    var h = prefix ? header.slice(prefix.length + 1) : header;
+    if (!h) h = header;
+    return h
+      .replace(/_/g, " ")
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .trim();
+  }
+
+  function isHighlightColumn(header) {
+    var h = header.toLowerCase();
+    return HIGHLIGHT_KEYWORDS.some(function (kw) { return h.indexOf(kw) !== -1; });
+  }
+
+  function formatValue(v) {
+    if (v === undefined || v === null || v === "") return null;
+    var n = Number(v);
+    if (!isNaN(n) && v.toString().trim() !== "") return n + "%";
+    return v;
+  }
+
+  function initialsOf(match) {
+    var parts = [FIRSTNAME_COLUMN, MIDDLENAME_COLUMN, LASTNAME_COLUMN]
+      .map(function (col) { return (match[col] || "").trim(); })
+      .filter(function (v) { return v.length > 0; })
+      .map(function (v) { return v.charAt(0).toUpperCase(); });
+    return parts.length ? parts.join(".") + "." : "STUDENT";
+  }
+
+  function loadGrades() {
+    try {
+      gradesData = parseCSV(EMBEDDED_CSV);
+    } catch (err) {
+      loadError = err;
+    }
+    return Promise.resolve();
+  }
+
+  function renderResult(html) {
+    document.getElementById("result").innerHTML = html;
+  }
+
+  function normalizeCode(s) {
+    return (s || "").trim().toUpperCase().replace(/\s+/g, "");
+  }
+
+  function periodColumns(match, period) {
+    var prefix = period + "_";
+    return Object.keys(match).filter(function (h) { return h.indexOf(prefix) === 0; });
+  }
+
+  function renderTabContent() {
+    if (!currentMatch) return "";
+
+    if (activeTab === "FinalRating") {
+      var rating = formatValue(currentMatch[FINAL_RATING_COLUMN]);
+      if (!rating) {
+        return '<div class="empty-box">Final rating not yet available.</div>';
+      }
+      return '<div class="rating-box"><div class="big">' + rating + '</div><div class="big-label">Final Rating</div></div>';
+    }
+
+    var cols = periodColumns(currentMatch, activeTab);
+    var hasValue = cols.some(function (h) { return formatValue(currentMatch[h]) !== null; });
+
+    if (!cols.length || !hasValue) {
+      return '<div class="empty-box">Grades for ' + activeTab + ' are not yet posted.</div>';
+    }
+
+    var rowsHtml = cols.map(function (h) {
+      var val = formatValue(currentMatch[h]);
+      if (val === null) return "";
+      var cls = isHighlightColumn(h) ? ' class="highlight"' : "";
+      return '<tr' + cls + '><td class="label">' + labelize(h, activeTab) + '</td><td class="value">' + val + '</td></tr>';
+    }).join("");
+
+    return '<table class="grades">' + rowsHtml + '</table>';
+  }
+
+  function renderStudent() {
+    var section = currentMatch["Section"] ? ("Section " + currentMatch["Section"]) : "";
+
+    var tabDefs = PERIODS.concat(["FinalRating"]);
+    var tabLabels = { FinalRating: "Final Rating" };
+
+    var tabsHtml = tabDefs.map(function (t) {
+      var cls = t === activeTab ? "tab-btn active" : "tab-btn";
+      return '<button type="button" class="' + cls + '" data-tab="' + t + '">' + (tabLabels[t] || t) + '</button>';
+    }).join("");
+
+    renderResult(
+      '<div class="student-name">' + initialsOf(currentMatch) + '</div>' +
+      '<div class="student-meta">' + section + '</div>' +
+      '<div class="tabs">' + tabsHtml + '</div>' +
+      '<div id="tabContent">' + renderTabContent() + '</div>'
+    );
+
+    Array.prototype.forEach.call(document.querySelectorAll(".tab-btn"), function (btn) {
+      btn.addEventListener("click", function () {
+        activeTab = btn.getAttribute("data-tab");
+        renderStudent();
+      });
+    });
+  }
+
+  function handleLookup(e) {
+    e.preventDefault();
+    var code = normalizeCode(document.getElementById("privateCode").value);
+
+    if (loadError) {
+      renderResult('<div class="error-box">Grade data could not be loaded. If you are viewing this file locally, please open it through the published GitHub Pages link instead. (' + loadError.message + ')</div>');
+      return;
+    }
+
+    var match = gradesData.find(function (row) {
+      return normalizeCode(row[CODE_COLUMN]) === code;
+    });
+
+    if (!match) {
+      renderResult('<div class="error-box">No record found for that private code. Double-check it and try again, or contact your instructor.</div>');
+      return;
+    }
+
+    currentMatch = match;
+    activeTab = "Prelim";
+    renderStudent();
+  }
+
+  document.getElementById("lookupForm").addEventListener("submit", handleLookup);
+  loadGrades();
+</script>
+
+</body>
+</html>
