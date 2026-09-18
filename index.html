@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHARMACOLOGY 💊</title>
+<style>
+  :root{
+    --deep: #063a3a;
+    --teal: #0d9488;
+    --teal-light: #5eead4;
+    --blue: #0369a1;
+    --blue-light: #7dd3fc;
+    --bg: #f0fbfa;
+    --card: #ffffff;
+    --ink: #0f2e2e;
+    --muted: #4b6b6a;
+    --danger: #b91c1c;
+    --danger-bg: #fef2f2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(160deg, #e9fbf7 0%, #f5fbfd 45%, #eaf5fc 100%);
+    color: var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 32px 16px 60px;
+  }
+  header{
+    text-align:center;
+    margin-bottom: 28px;
+    max-width: 560px;
+  }
+  .capsule{
+    display:inline-block;
+    background: linear-gradient(120deg, var(--teal) 0%, var(--blue) 100%);
+    color:#fff;
+    padding: 10px 26px;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+    box-shadow: 0 8px 20px rgba(3,105,161,.25);
+  }
+  .card{
+    background: var(--card);
+    border-radius: 18px;
+    padding: 28px 26px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 45px rgba(3, 45, 45, 0.12);
+    border: 1px solid #e2f3f1;
+  }
+  .field{
+    margin-bottom: 16px;
+  }
+  label{
+    display:block;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  input[type=text]{
+    width:100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #cfe9e6;
+    font-size: 1rem;
+    outline:none;
+    transition: border-color .15s, box-shadow .15s;
+    background:#f7fefd;
+  }
+  input[type=text]:focus{
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(13,148,136,.15);
+  }
+  button{
+    width:100%;
+    padding: 13px 14px;
+    border:none;
+    border-radius: 10px;
+    background: linear-gradient(120deg, var(--teal) 0%, var(--blue) 100%);
+    color:#fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor:pointer;
+    letter-spacing:.02em;
+    transition: transform .1s, box-shadow .15s;
+  }
+  button:hover{ box-shadow: 0 8px 20px rgba(3,105,161,.35); }
+  button:active{ transform: translateY(1px); }
+  .note{
+    font-size: .78rem;
+    color: var(--muted);
+    margin-top: 14px;
+    line-height:1.4;
+  }
+  #result{ margin-top: 22px; }
+  .hidden{ display:none !important; }
+  .student-name{
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--deep);
+    letter-spacing: .06em;
+    margin-bottom: 2px;
+  }
+  .student-meta{
+    font-size: .85rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .tabs{
+    display:flex;
+    gap:4px;
+    background:#eef8f7;
+    border-radius:10px;
+    padding:4px;
+    margin-bottom:16px;
+  }
+  .tab-btn{
+    flex:1;
+    border:none;
+    background:transparent;
+    color: var(--muted);
+    font-size:.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    padding:8px 4px;
+    border-radius:7px;
+    cursor:pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .tab-btn:hover{ color: var(--deep); }
+  .tab-btn.active{
+    background: linear-gradient(120deg, var(--teal) 0%, var(--blue) 100%);
+    color:#fff;
+    box-shadow: 0 4px 12px rgba(3,105,161,.3);
+  }
+  table.grades{
+    width:100%;
+    border-collapse: collapse;
+    font-size: .92rem;
+  }
+  table.grades tr{
+    border-bottom: 1px solid #e2f3f1;
+  }
+  table.grades tr:last-child{ border-bottom:none; }
+  table.grades td{
+    padding: 9px 4px;
+  }
+  table.grades td.label{
+    color: var(--muted);
+  }
+  table.grades td.value{
+    text-align:right;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  table.grades tr.highlight td{
+    font-size: 1.05rem;
+    color: var(--teal);
+  }
+  table.grades tr.highlight td.value{
+    color: var(--blue);
+    font-weight:800;
+  }
+  .rating-box{
+    text-align:center;
+    padding: 18px 4px 6px;
+  }
+  .rating-box .big{
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--blue);
+  }
+  .rating-box .big-label{
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing:.05em;
+    color: var(--muted);
+  }
+  .empty-box{
+    color: var(--muted);
+    font-size: .88rem;
+    text-align:center;
+    padding: 22px 8px;
+    font-style: italic;
+  }
+  .error-box{
+    background: var(--danger-bg);
+    border: 1px solid #fecaca;
+    color: var(--danger);
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: .9rem;
+  }
+  .loading-box{
+    color: var(--muted);
+    font-size: .9rem;
+    text-align:center;
+  }
+  footer{
+    margin-top: 30px;
+    color: var(--deep);
+    font-size: .95rem;
+    font-weight: 600;
+    font-style: italic;
+    text-align:center;
+    max-width: 480px;
+    letter-spacing:.01em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="capsule">PHARMACOLOGY 💊</span>
+</header>
+
+<div class="card">
+  <form id="lookupForm">
+    <div class="field">
+      <label for="privateCode">Private Code</label>
+      <input type="text" id="privateCode" autocomplete="off" required>
+    </div>
+    <button type="submit">Assessing my Therapeutic Index</button>
+    <p class="note">Your private code was given to you by your instructor. Do not share it — anyone with your code can see your grades.</p>
+  </form>
+
+  <div id="result"></div>
+</div>
+
+<footer>
+  In case no one told you... You are PHARMAnomenal! (˵ •̀ ᴗ - ˵ )
+</footer>
+
+<script>
+  // ---- CONFIG ----
+  var CSV_PATH = "grades.csv";
+  var CODE_COLUMN = "PrivateCode";
+  var LASTNAME_COLUMN = "LastName";
+  var FIRSTNAME_COLUMN = "FirstName";
+  var MIDDLENAME_COLUMN = "MiddleName";
+
+  // Grading periods, in the order their tabs appear. Each period's columns
+  // are any CSV header starting with "<Period>_" (e.g. Prelim_Quiz, Prelim_Grade).
+  var PERIODS = ["Prelim", "Midterm", "Final"];
+  // Column holding the overall computed rating, shown on its own tab.
+  var FINAL_RATING_COLUMN = "FinalRating";
+
+  // Within a period's columns, one whose header contains one of these words
+  // is treated as that period's headline grade and shown highlighted.
+  var HIGHLIGHT_KEYWORDS = ["grade", "rating", "total"];
+
+  var gradesData = [];
+  var loadError = null;
+  var currentMatch = null;
+  var activeTab = "Prelim";
+
+  function parseCSV(text) {
+    // Minimal CSV parser: handles quoted fields with commas/quotes, plain commas otherwise.
+    var rows = [];
+    var row = [];
+    var field = "";
+    var inQuotes = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else {
+          field += c;
+        }
+      } else {
+        if (c === '"') { inQuotes = true; }
+        else if (c === ',') { row.push(field); field = ""; }
+        else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ""; }
+        else if (c === '\r') { /* skip */ }
+        else { field += c; }
+      }
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    rows = rows.filter(function (r) { return r.length > 1 || (r.length === 1 && r[0].trim() !== ""); });
+    if (!rows.length) return [];
+    var headers = rows[0].map(function (h) { return h.trim(); });
+    return rows.slice(1).map(function (r) {
+      var obj = {};
+      headers.forEach(function (h, idx) { obj[h] = (r[idx] || "").trim(); });
+      return obj;
+    });
+  }
+
+  function labelize(header, prefix) {
+    var h = prefix ? header.slice(prefix.length + 1) : header;
+    if (!h) h = header;
+    return h
+      .replace(/_/g, " ")
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .trim();
+  }
+
+  function isHighlightColumn(header) {
+    var h = header.toLowerCase();
+    return HIGHLIGHT_KEYWORDS.some(function (kw) { return h.indexOf(kw) !== -1; });
+  }
+
+  function formatValue(v) {
+    if (v === undefined || v === null || v === "") return null;
+    var n = Number(v);
+    if (!isNaN(n) && v.toString().trim() !== "") return n + "%";
+    return v;
+  }
+
+  function initialsOf(match) {
+    var parts = [FIRSTNAME_COLUMN, MIDDLENAME_COLUMN, LASTNAME_COLUMN]
+      .map(function (col) { return (match[col] || "").trim(); })
+      .filter(function (v) { return v.length > 0; })
+      .map(function (v) { return v.charAt(0).toUpperCase(); });
+    return parts.length ? parts.join(".") + "." : "STUDENT";
+  }
+
+  function loadGrades() {
+    return fetch(CSV_PATH, { cache: "no-store" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("Could not load grades.csv (" + res.status + ")");
+        return res.text();
+      })
+      .then(function (text) {
+        gradesData = parseCSV(text);
+      })
+      .catch(function (err) {
+        loadError = err;
+      });
+  }
+
+  function renderResult(html) {
+    document.getElementById("result").innerHTML = html;
+  }
+
+  function normalizeCode(s) {
+    return (s || "").trim().toUpperCase().replace(/\s+/g, "");
+  }
+
+  function periodColumns(match, period) {
+    var prefix = period + "_";
+    return Object.keys(match).filter(function (h) { return h.indexOf(prefix) === 0; });
+  }
+
+  function renderTabContent() {
+    if (!currentMatch) return "";
+
+    if (activeTab === "FinalRating") {
+      var rating = formatValue(currentMatch[FINAL_RATING_COLUMN]);
+      if (!rating) {
+        return '<div class="empty-box">Final rating not yet available.</div>';
+      }
+      return '<div class="rating-box"><div class="big">' + rating + '</div><div class="big-label">Final Rating</div></div>';
+    }
+
+    var cols = periodColumns(currentMatch, activeTab);
+    var hasValue = cols.some(function (h) { return formatValue(currentMatch[h]) !== null; });
+
+    if (!cols.length || !hasValue) {
+      return '<div class="empty-box">Grades for ' + activeTab + ' are not yet posted.</div>';
+    }
+
+    var rowsHtml = cols.map(function (h) {
+      var val = formatValue(currentMatch[h]);
+      if (val === null) return "";
+      var cls = isHighlightColumn(h) ? ' class="highlight"' : "";
+      return '<tr' + cls + '><td class="label">' + labelize(h, activeTab) + '</td><td class="value">' + val + '</td></tr>';
+    }).join("");
+
+    return '<table class="grades">' + rowsHtml + '</table>';
+  }
+
+  function renderStudent() {
+    var section = currentMatch["Section"] ? ("Section " + currentMatch["Section"]) : "";
+
+    var tabDefs = PERIODS.concat(["FinalRating"]);
+    var tabLabels = { FinalRating: "Final Rating" };
+
+    var tabsHtml = tabDefs.map(function (t) {
+      var cls = t === activeTab ? "tab-btn active" : "tab-btn";
+      return '<button type="button" class="' + cls + '" data-tab="' + t + '">' + (tabLabels[t] || t) + '</button>';
+    }).join("");
+
+    renderResult(
+      '<div class="student-name">' + initialsOf(currentMatch) + '</div>' +
+      '<div class="student-meta">' + section + '</div>' +
+      '<div class="tabs">' + tabsHtml + '</div>' +
+      '<div id="tabContent">' + renderTabContent() + '</div>'
+    );
+
+    Array.prototype.forEach.call(document.querySelectorAll(".tab-btn"), function (btn) {
+      btn.addEventListener("click", function () {
+        activeTab = btn.getAttribute("data-tab");
+        renderStudent();
+      });
+    });
+  }
+
+  function handleLookup(e) {
+    e.preventDefault();
+    var code = normalizeCode(document.getElementById("privateCode").value);
+
+    if (loadError) {
+      renderResult('<div class="error-box">Grade data could not be loaded. If you are viewing this file locally, please open it through the published GitHub Pages link instead. (' + loadError.message + ')</div>');
+      return;
+    }
+
+    var match = gradesData.find(function (row) {
+      return normalizeCode(row[CODE_COLUMN]) === code;
+    });
+
+    if (!match) {
+      renderResult('<div class="error-box">No record found for that private code. Double-check it and try again, or contact your instructor.</div>');
+      return;
+    }
+
+    currentMatch = match;
+    activeTab = "Prelim";
+    renderStudent();
+  }
+
+  document.getElementById("lookupForm").addEventListener("submit", handleLookup);
+  loadGrades();
+</script>
+
+</body>
+</html>
